@@ -19,12 +19,12 @@ $remoteCache = Object::create([
     'dbIndex' => 0,
 ]);
 
-// Yac 本地高速缓存，建议使用 Yac、memcache
+// Yac 本地高速缓存
 $localCache = Object::create([
     'class' => LocalYacCache::class,
     'prefix' => 'zf:',
 ]);
-// memcache 远端缓存
+// memcache 本地高速缓存
 $localCache = Object::create([
     'class' => LocalMemCache::class,
     'host' => '172.16.37.128',
