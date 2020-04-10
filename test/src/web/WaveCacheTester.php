@@ -10,6 +10,7 @@ namespace Test\Web;
 
 use DebugBootstrap\Abstracts\Tester;
 use Zf\Helper\Object;
+use Zf\WaveCache\Drivers\LocalMemCache;
 use Zf\WaveCache\Drivers\LocalYacCache;
 use Zf\WaveCache\Drivers\RemoteRedisCache;
 use Zf\WaveCache\WaveCache;
@@ -31,7 +32,7 @@ class WaveCacheTester extends Tester
      */
     public function run()
     {
-        // 远端数据缓存组件，可参考redis，db等
+        // Redis 远端数据缓存组件，可参考redis，db等
         $remoteCache = Object::create([
             'class' => RemoteRedisCache::class,
             'host' => '172.16.37.145',
@@ -39,10 +40,17 @@ class WaveCacheTester extends Tester
             'password' => 'iampassword',
             'dbIndex' => 0,
         ]);
-        // 本地高速缓存，建议使用 Yac、memcache
+
+        // Yac 本地高速缓存，建议使用 Yac、memcache
         $localCache = Object::create([
             'class' => LocalYacCache::class,
             'prefix' => 'zf:',
+        ]);
+        // memcache 远端缓存
+        $localCache = Object::create([
+            'class' => LocalMemCache::class,
+            'host' => '172.16.37.128',
+            'port' => 10000,
         ]);
 
         // 二级缓存实例化
@@ -61,14 +69,13 @@ class WaveCacheTester extends Tester
         };
         /* @var $cache WaveCache */
         // 设置缓存
-//        $cache->set($key, $callback, 5);
+        $cache->set($key, $callback, 5);
 
         // 获取缓存
-//        $data = $cache->get($key, $callback, 5);
-//        var_dump($data);
-
+        $data = $cache->get($key, $callback, 5);
+        var_dump($data);
 
         $status = $cache->del($key);
-
+        var_dump($status);
     }
 }
